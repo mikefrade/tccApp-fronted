@@ -28,7 +28,9 @@ import {
 })
 export class PrincipalPage {
   map: GoogleMap;
-  lat:any; lang:any;
+  clickable: boolean = true;
+  lat: any; lang: any;
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public geolocation: Geolocation) {
@@ -48,9 +50,7 @@ export class PrincipalPage {
   }
 
   loadMap(position) {
-  console.log("Entrei no carregamento do Mapa");
-    let latlng: LatLng  = new LatLng( position.coords.latitude, position.coords.longitude );
-    console.log( "Posição: ", position.coords.latitude, position.coords.longitude );
+    let latlng: LatLng = new LatLng(position.coords.latitude, position.coords.longitude);
     let mapOptions: GoogleMapOptions = {
       camera: {
         target: latlng,
@@ -59,26 +59,27 @@ export class PrincipalPage {
       }
     };
     this.map = GoogleMaps.create('map_canvas', mapOptions);
-    console.log("Passei map create");
-
-   //   this.map.on(GoogleMapsEvent.MAP_READY).subscribe(() => {
-   //     console.log('Map is ready!')
-   //   });
-      this.map.one(GoogleMapsEvent.MAP_READY).then(()=>{
-        console.log("Passei map one");
-        this.map.addMarker({
-          title: 'Eu estou aqui!! Iuuuu',
-          icon: 'blue',
-          animation: 'DROP',
-          position: latlng
-        })
-        .then(marker => {
-          marker.on(GoogleMapsEvent.MARKER_CLICK)
-            .subscribe(() => {
-              alert('clicked');
-            });
-        });
+    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+      console.log("Map is ready!");
+      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
+      this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
+        var obj = JSON.parse(data);
+        this.criarMarcador('Criei um marcador', 'red', obj);
       });
-   }
+    });
+  }
+  criarMarcador(titulo, coricone, posicao) {
+    this.map.addMarker({
+      title: titulo,
+      icon: coricone,
+      animation: 'DROP',
+      position: posicao
+    })//.then(marker => {
+     // marker.on(GoogleMapsEvent.MARKER_CLICK)
+     //   .subscribe(() => {
+      //    alert('Eu cliquei no marcador!Iuuu');
+     //   });
+   // });
+  }
 }
 
