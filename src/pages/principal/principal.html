@@ -3,22 +3,17 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Principal </ion-title>
+    <ion-title> TCC App </ion-title>
   </ion-navbar>
 </ion-header>
 
+
+
 <ion-content>
   <div style="height: 100%;" id="map_canvas">
-    <div id="searchBox">
-      <input type="text" id="query" size="30" />
-      <button id="searchBtn">Search</button>
-    </div>
-
+    <span class="smallPanel">
+      <input ion-input [(ngModel)]="search_address" value="Belo Horizonte, Minas Gerais">
+      <button ion-button (click)="procurarEnd_click($event)">Procurar</button>
+    </span>
   </div>
-
 </ion-content>
-
-
-
-
-

@@ -11,14 +11,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  */
 
 import {
-  GoogleMaps,
-  GoogleMap,
-  GoogleMapsEvent,
-  GoogleMapOptions,
-  CameraPosition,
-  MarkerOptions,
-  Marker,
-  LatLng
+  GoogleMaps, GoogleMap, GoogleMapsEvent,
+  GoogleMapOptions, CameraPosition, MarkerOptions,
+  Marker, LatLng,
+  Geocoder, BaseArrayClass, GeocoderResult,
 } from '@ionic-native/google-maps';
 
 @IonicPage()
@@ -30,6 +26,9 @@ export class PrincipalPage {
   map: GoogleMap;
   clickable: boolean = true;
   lat: any; lang: any;
+
+  isRunning: boolean = false;
+  search_address: any;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -50,6 +49,10 @@ export class PrincipalPage {
   }
 
   loadMap(position) {
+
+    this.search_address = 'Belo Horizonte, Minas Gerais';
+
+
     let latlng: LatLng = new LatLng(position.coords.latitude, position.coords.longitude);
     let mapOptions: GoogleMapOptions = {
       camera: {
@@ -75,11 +78,48 @@ export class PrincipalPage {
       animation: 'DROP',
       position: posicao
     })//.then(marker => {
-     // marker.on(GoogleMapsEvent.MARKER_CLICK)
-     //   .subscribe(() => {
-      //    alert('Eu cliquei no marcador!Iuuu');
-     //   });
-   // });
+    // marker.on(GoogleMapsEvent.MARKER_CLICK)
+    //   .subscribe(() => {
+    //    alert('Eu cliquei no marcador!Iuuu');
+    //   });
+    // });
+  }
+
+
+  procurarEnd_click(event) {
+    // Address -> latitude,longitude
+    Geocoder.geocode({
+      "address": this.search_address
+    }).then((results: GeocoderResult[]) => {
+      //  console.log(results);
+      //  alert(results);
+      if (!results.length) {
+        this.isRunning = false;
+        return null;
+      }
+      return this.map.animateCamera({
+        'target': results[0].position,
+        'zoom': 17
+      }).then(() => {
+        this.isRunning = false;
+      });
+      // Add a marker
+      //  return this.map.addMarker({
+      //  'position': results[0].position,
+      //  'title':  JSON.stringify(results[0].position)
+      //});
+    })
+    // .then((marker: Marker) => {
+    // Move to the position
+    // this.map.animateCamera({
+    //   'target':
+    //   marker.getPosition(),
+    //   'zoom': 17
+    //  }).then(() => {
+    //    marker.showInfoWindow();
+    //    this.isRunning = false;
+    //  });
+    //  });
   }
 }
 
