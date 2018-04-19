@@ -41,18 +41,17 @@ export class PrincipalPage {
 
   geolocateNative() {
     this.geolocation.getCurrentPosition().then((geoposition: Geoposition) => {
-      console.log(geoposition);
+     // console.log(geoposition);
       this.loadMap(geoposition);
     }).catch((error) => {
-      console.log('Erro ao obter a localização', error);
+     // console.log('Erro ao obter a localização', error);
+    // alert ('Erro ao obter a localização'+  error);
     });
   }
 
   loadMap(position) {
 
-    this.search_address = 'Belo Horizonte, Minas Gerais';
-
-
+    this.search_address = 'Rua Goitacazes, 1159. BH';
     let latlng: LatLng = new LatLng(position.coords.latitude, position.coords.longitude);
     let mapOptions: GoogleMapOptions = {
       camera: {
@@ -63,8 +62,7 @@ export class PrincipalPage {
     };
     this.map = GoogleMaps.create('map_canvas', mapOptions);
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-      console.log("Map is ready!");
-      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
+//      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         var obj = JSON.parse(data);
         this.criarMarcador('Criei um marcador', 'red', obj);

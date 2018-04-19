@@ -10,10 +10,14 @@
 
 
 <ion-content>
+
   <div style="height: 100%;" id="map_canvas">
-    <span class="smallPanel">
+
+    <span  class="smallPanel">
       <input ion-input [(ngModel)]="search_address" value="Belo Horizonte, Minas Gerais">
-      <button ion-button (click)="procurarEnd_click($event)">Procurar</button>
+      <button ion-button round small (click)="procurarEnd_click($event)">Procurar</button>
     </span>
+
+
   </div>
 </ion-content>
