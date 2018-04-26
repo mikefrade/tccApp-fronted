@@ -2,7 +2,7 @@
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Component } from '@angular/core/';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { AuthService } from '../../services/auth.service';
 /**
  * Generated class for the PrincipalPage page.
  *
@@ -32,7 +32,8 @@ export class PrincipalPage {
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
-    public geolocation: Geolocation) {
+    public geolocation: Geolocation,
+    public auth: AuthService) {
   }
 
   ionViewDidLoad() {
@@ -41,11 +42,11 @@ export class PrincipalPage {
 
   geolocateNative() {
     this.geolocation.getCurrentPosition().then((geoposition: Geoposition) => {
-     // console.log(geoposition);
+      // console.log(geoposition);
       this.loadMap(geoposition);
     }).catch((error) => {
-     // console.log('Erro ao obter a localização', error);
-    // alert ('Erro ao obter a localização'+  error);
+      // console.log('Erro ao obter a localização', error);
+      // alert ('Erro ao obter a localização'+  error);
     });
   }
 
@@ -62,7 +63,7 @@ export class PrincipalPage {
     };
     this.map = GoogleMaps.create('map_canvas', mapOptions);
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-//      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
+      //      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         var obj = JSON.parse(data);
         this.criarMarcador('Criei um marcador', 'red', obj);
@@ -119,5 +120,13 @@ export class PrincipalPage {
     //  });
     //  });
   }
+  sair() {
+    this.auth
+    this.auth.logoffFacebook()
+      .then(() => {
+        this.navCtrl.setRoot('HomePage');
+      })
+  }
+
 }
 
