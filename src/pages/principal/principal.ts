@@ -25,7 +25,7 @@ import {
 export class PrincipalPage {
   map: GoogleMap;
   clickable: boolean = true;
-  lat: any; lang: any;
+  lat: any; lng: any;
 
   isRunning: boolean = false;
   search_address: any;
@@ -51,19 +51,19 @@ export class PrincipalPage {
   }
 
   loadMap(position) {
-
-    this.search_address = 'Rua Goitacazes, 1159. BH';
+    this.search_address = 'Barro Preto, BH';
     let latlng: LatLng = new LatLng(position.coords.latitude, position.coords.longitude);
-    let mapOptions: GoogleMapOptions = {
-      camera: {
-        target: latlng,
-        zoom: 17,
-        tilt: 30
-      }
-    };
-    this.map = GoogleMaps.create('map_canvas', mapOptions);
+    this.map = GoogleMaps.create('map_canvas');
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-      //      this.criarMarcador('Eu estou aqui!! Iuuuu', 'blue', latlng)
+      this.map.setMyLocationEnabled(true);
+      this.map.setOptions({
+        'controls': {
+          'compass': true, 'myLocationButton': true, // GEOLOCATION BUTTON
+          'indoorPicker': true, 'zoom': true
+        },
+        'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
+        'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
+      });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         var obj = JSON.parse(data);
         this.criarMarcador('Criei um marcador', 'red', obj);
@@ -98,7 +98,7 @@ export class PrincipalPage {
       }
       return this.map.animateCamera({
         'target': results[0].position,
-        'zoom': 17
+        'zoom': 15
       }).then(() => {
         this.isRunning = false;
       });
@@ -120,13 +120,5 @@ export class PrincipalPage {
     //  });
     //  });
   }
-  sair() {
-    this.auth
-    this.auth.logoffFacebook()
-      .then(() => {
-        this.navCtrl.setRoot('HomePage');
-      })
-  }
-
 }
 

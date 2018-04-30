@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, ToastController } from 'ionic-angular';
+import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth.service';
@@ -15,8 +15,8 @@ export class MyApp {
   pages: Array<{title: string, component: string}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar,
-     public splashScreen: SplashScreen,  public auth: AuthService,
-     private toastCtrl: ToastController) {
+     public splashScreen: SplashScreen,  public auth: AuthService
+     ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -41,7 +41,7 @@ export class MyApp {
     if(page.title='Sair'){
       this.auth.logoffFacebook()
       .then(()=>{
-        this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'lOGOFF EFETUADO!' });
+        
       })
       
     }

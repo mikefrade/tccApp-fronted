@@ -1,12 +1,13 @@
-
+import { ToastController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { Injectable } from '@angular/core';
 
 
-@Injectable () 
+@Injectable()
 export class AuthService {
 
-    constructor(public facebook: Facebook) {
+    constructor(public facebook: Facebook,
+    private toastCtrl: ToastController) {
 
     }
 
@@ -14,8 +15,8 @@ export class AuthService {
         console.log('entrei no login facebook')
         return this.facebook.login(['public_profile', 'email'])
             .then((res: FacebookLoginResponse) => {
-                console.log(res.authResponse.accessToken)
-                alert(res.authResponse.accessToken);
+                console.log(res.authResponse.accessToken);
+                this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'LOGIN EFETUADO!' });
 
             })
     }
@@ -24,7 +25,7 @@ export class AuthService {
     logoffFacebook() {
         return this.facebook.logout()
             .then(() => {
-                alert('saiu!');
+                this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'lOGOFF EFETUADO!' });
             })
     }
 }

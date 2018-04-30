@@ -31,6 +31,7 @@ export class HomePage {
     //this.navCtrl.setRoot('PrincipalPage');
     this.auth.loginFacebook()
       .then(() => {
+        this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'LOGIN EFETUADO!' });
         this.navCtrl.setRoot('PrincipalPage');
       })
       .catch((error) => {
