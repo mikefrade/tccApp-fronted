@@ -65,8 +65,9 @@ export class PrincipalPage {
         'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
-        var obj = JSON.parse(data);
-        this.criarMarcador('Criei um marcador', 'red', obj);
+   
+  
+        this.navCtrl.push('NotificacaoPage', { posicao: data});
       });
     });
   }
