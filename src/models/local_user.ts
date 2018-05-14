@@ -4,4 +4,5 @@ export interface LocalUser{
     email: string;
     senha: string;
 
+
 }

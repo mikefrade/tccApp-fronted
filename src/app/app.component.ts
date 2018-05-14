@@ -3,6 +3,7 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthService } from '../services/auth.service';
+import { HomePage } from '../pages/home/home';
 
 @Component({
   templateUrl: 'app.html'
@@ -21,7 +22,9 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Sair', component: 'HomePage' }
+      { title: 'Página Inicial', component: 'PrincipalPage' },
+      { title: 'Perfil', component: 'ProfilePage' },
+      { title: 'Logout', component: '' }
     ];
 
   }
@@ -35,16 +38,17 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
+  openPage(page: {title: string, component: string}) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    if(page.title='Sair'){
-      this.auth.logoffFacebook()
-      .then(()=>{
-        
-      })
-      
+    switch (page.title){
+      case 'Logout':
+      this.auth.logoffFacebook();
+      this.nav.setRoot(HomePage);
+      break;
+
+      default:
+      this.nav.setRoot(page.component);
     }
-    this.nav.setRoot(page.component);
   }
 }

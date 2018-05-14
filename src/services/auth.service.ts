@@ -17,13 +17,9 @@ export class AuthService {
     loginFacebook() {
         return this.facebook.login(['public_profile', 'email'])
             .then((response: FacebookLoginResponse) => {
-                //  let permissions = new Array<string>();
-                //  permissions = ["public_profile", "email"];
-                //  this.facebook.login(permissions).then((response) => {
                 let params = new Array<string>();
                 this.facebook.api("/me?fields=name,email", params)
                     .then(res => {
-                        //estou usando o model para criar os usuarios
                         let user: LocalUser = {
                             token: response.authResponse.accessToken,
                             nome: res.name,

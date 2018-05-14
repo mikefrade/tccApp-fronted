@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, IonicPage, MenuController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 //import { Facebook } from '@ionic-native/facebook';
 
 @IonicPage()
@@ -14,8 +15,8 @@ export class HomePage {
   constructor(public navCtrl: NavController,
     public menu: MenuController,
     public auth: AuthService,
-    private toastCtrl: ToastController
-    //public facebook: Facebook
+    private toastCtrl: ToastController,
+    public storage: StorageService
   ) {
   }
 
@@ -31,8 +32,13 @@ export class HomePage {
     //this.navCtrl.setRoot('PrincipalPage');
     this.auth.loginFacebook()
       .then(() => {
-        this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'LOGIN EFETUADO!' });
-        this.navCtrl.setRoot('PrincipalPage');
+        if (this.storage.getLocalUser().email){
+          this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'LOGIN EFETUADO!' });
+          this.navCtrl.setRoot('PrincipalPage');
+        } else{
+          this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'Erro ao efetuar login' })
+        }
+
       })
       .catch((error) => {
         this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'Erro ao efetuar login' })
