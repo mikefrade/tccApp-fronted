@@ -16,6 +16,7 @@ import {
   Marker, LatLng,
   Geocoder, BaseArrayClass, GeocoderResult,
 } from '@ionic-native/google-maps';
+import { StorageService } from '../../services/storage.service';
 
 @IonicPage()
 @Component({
@@ -33,10 +34,12 @@ export class PrincipalPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public geolocation: Geolocation,
-    public auth: AuthService) {
+    public auth: AuthService,
+    public storage: StorageService) {
   }
 
   ionViewDidLoad() {
+
     this.geolocateNative();
   }
 
@@ -65,9 +68,9 @@ export class PrincipalPage {
         'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
-   
-  
-        this.navCtrl.push('NotificacaoPage', { posicao: data});
+
+
+        this.navCtrl.push('NotificacaoPage', { posicao: data });
       });
     });
   }
@@ -84,7 +87,10 @@ export class PrincipalPage {
     //   });
     // });
   }
-
+  verUserLogado() {
+    let usr = this.storage.getLocalUser();
+    alert(JSON.stringify(usr));
+  }
 
   procurarEnd_click(event) {
     // Address -> latitude,longitude

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { PrincipalPage } from '../principal/principal';
+// import { PrincipalPage } from '../principal/principal';
 
 /**
  * Generated class for the NotificacaoPage page.
