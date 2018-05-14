@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { CameraOptions, Camera } from '@ionic-native/camera';
 // import { PrincipalPage } from '../principal/principal';
 
 /**
@@ -16,7 +17,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class NotificacaoPage  {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {  }
+  foto: string;
+  cameraOn: boolean = false;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+  public camera: Camera) {  }
 
 
   
@@ -32,6 +37,26 @@ export class NotificacaoPage  {
    // var obj = JSON.parse(pos);
    // this.principalPage.criarMarcador('Criei um marcador', 'red', obj);
     this.navCtrl.pop();
+  }
+
+  getCameraPicture(){
+    this.cameraOn = true;
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    
+    this.camera.getPicture(options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64:
+     this.foto = 'data:image/png;base64,' + imageData;
+     this.cameraOn = false;
+    }, (err) => {
+     // Handle error
+    });
+  
   }
 
 

@@ -29,4 +29,10 @@ export class ProfilePage {
     }
   }
 
+
+  verUserLogado() {
+    let usr = this.storage.getLocalUser();
+    alert(JSON.stringify(usr));
+  }
+
 }

@@ -1,13 +1,26 @@
 page-home {
     h3{
+
         text-align: center
     }
 
     img{
+
         width: 200px;
         align-self: center;
         margin: auto;
         display: block;
         padding: 10px;
+    }
+
+    button{
+        position: absolute;
+        top:100px; /* posiciona a 70px para baixo */
+    }
+    form{
+        position: absolute;
+        top: 15%;
+        left: 9%;
+       // transform: translateY(-50%) translateX(-50%)
     }
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { NotificacaoPage } from './notificacao';
+import { Camera } from '@ionic-native/camera'
 
 @NgModule({
   declarations: [
@@ -9,5 +10,8 @@ import { NotificacaoPage } from './notificacao';
   imports: [
     IonicPageModule.forChild(NotificacaoPage),
   ],
+  providers: [
+    Camera
+  ]
 })
 export class NotificacaoPageModule {}

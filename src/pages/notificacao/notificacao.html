@@ -14,21 +14,21 @@
 
 
 <ion-content padding>
-
-
-
-  <h3>Página de Notificação</h3>
-
-  <img src="assets/imgs/logo.png" alt="logo">
+<ion-card>
+  <ion-card-header>
+  <h1>Foto da notificação</h1>
+  </ion-card-header>
+  <ion-item *ngIf="foto">
+    <img [src]="foto">
+  </ion-item>
+  <ion-item>
+    <button ion-button block (click)="getCameraPicture()" [disabled]="cameraOn"> Tirar foto </button>
+  </ion-item>
+</ion-card>
 
 <div>
-
-  
   <form>
     <button ion-button small (click)='criarNotificacao()'> Notificar </button>
-
   </form>
-
 </div>
-
 </ion-content>

@@ -34,8 +34,7 @@ export class PrincipalPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public geolocation: Geolocation,
-    public auth: AuthService,
-    public storage: StorageService) {
+    public auth: AuthService) {
   }
 
   ionViewDidLoad() {
@@ -87,10 +86,7 @@ export class PrincipalPage {
     //   });
     // });
   }
-  verUserLogado() {
-    let usr = this.storage.getLocalUser();
-    alert(JSON.stringify(usr));
-  }
+
 
   procurarEnd_click(event) {
     // Address -> latitude,longitude
