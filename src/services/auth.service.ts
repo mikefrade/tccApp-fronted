@@ -16,17 +16,32 @@ export class AuthService {
 
     loginFacebook() {
         return this.facebook.login(['public_profile', 'email'])
-            .then((res: FacebookLoginResponse) => {
-                let user: LocalUser = {
-                    token: res.authResponse.accessToken
-                };
-                this.storage.setLocalUser(user);
-            })
+            .then((response: FacebookLoginResponse) => {
+                //  let permissions = new Array<string>();
+                //  permissions = ["public_profile", "email"];
+                //  this.facebook.login(permissions).then((response) => {
+                let params = new Array<string>();
+                this.facebook.api("/me?fields=name,email", params)
+                    .then(res => {
+                        //estou usando o model para criar os usuarios
+                        let user: LocalUser = {
+                            token: response.authResponse.accessToken,
+                            nome: res.name,
+                            email: res.email,
+                            senha: res.id
+                        };
+                        this.storage.setLocalUser(user);
+                    }, (error) => {
+                        alert(error);
+                        console.log('ERRO LOGIN: ', error);
+                    })
+            }, (error) => {
+                alert(error);
+            });
     }
-
 
     logoffFacebook() {
         this.storage.setLocalUser(null);
-        return this.facebook.logout();  
+        return this.facebook.logout();
     }
 }
