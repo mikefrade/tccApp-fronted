@@ -64,7 +64,7 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 16, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
 
@@ -101,7 +101,7 @@ export class PrincipalPage {
       }
       return this.map.animateCamera({
         'target': results[0].position,
-        'zoom': 15
+        'zoom': 16
       }).then(() => {
         this.isRunning = false;
       });

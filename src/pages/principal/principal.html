@@ -3,21 +3,23 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title> TCC App </ion-title>
+    <ion-title> Notificar Problema </ion-title>
+
+
   </ion-navbar>
 </ion-header>
 
 
 
 <ion-content>
-  <div>
-      <span class="smallPanel">
-          <input ion-input [(ngModel)]="search_address">
-          <button ion-button round small (click)="procurarEnd_click($event)">Procurar</button>
-        </span>
-  </div>
 
   <div id="map_canvas">
-
+      <span class="smallPanel">
+      <input ion-input [(ngModel)]="search_address">
+      <button ion-button outline item-end icon-left (click)="procurarEnd_click($event)">
+        <ion-icon name="search"></ion-icon>
+        Pesquisar
+      </button>
+      </span>
   </div>
 </ion-content>
