@@ -16,39 +16,37 @@
 <ion-content padding>
   <ion-card>
     <ion-card-header>
-      <h1>Foto do Problema</h1>
+      <h2>Problema</h2>
     </ion-card-header>
+    <ion-item>
+      <ion-label> Foto: </ion-label>
+    </ion-item>
     <ion-item *ngIf="foto">
       <img [src]="foto">
     </ion-item>
     <ion-item>
-      <button ion-button block (click)="getCameraPicture()" [disabled]="cameraOn"> Tirar foto </button>
+      <button ion-button (click)="getCameraPicture()" [disabled]="cameraOn"> Câmera </button>
+      <button ion-button (click)="getGalleryPicture()" [disabled]="cameraOn"> Galeria </button>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Endereço: </ion-label>
+      <ion-label> {{ end }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Categoria: </ion-label>
+      <ion-select [(ngModel)]="categoria">
+        <ion-option value="saude">Saúde</ion-option>
+        <ion-option value="educacao">Educação</ion-option>
+        <ion-option value="iluminacao">Iluminação Pública</ion-option>
+        <ion-option value="via">Via Pública</ion-option>
+        <ion-option value="outros">Outros</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Descrição: </ion-label>
+      <ion-textarea type="text"> </ion-textarea>
     </ion-item>
   </ion-card>
-  <ion-item>
-      <ion-label stacked>Endereço</ion-label>
-      <ion-label>Rua X, 0. Bairro Z - Y</ion-label>
-    </ion-item>
-      <ion-item>
-        <ion-label>Categoria</ion-label>
-        <ion-select [(ngModel)]="categoria">
-          <ion-option value="saude">Saúde</ion-option>
-          <ion-option value="educacao">Educação</ion-option>
-          <ion-option value="iluminacao">Iluminação Pública</ion-option>
-          <ion-option value="via">Via Pública</ion-option>
-          <ion-option value="outros">Outros</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label stacked>Descrição</ion-label>
-        <ion-textarea type="text"> </ion-textarea>
-      </ion-item>
-      <ion-item>
-        
-      </ion-item>
-      <ion-item item-end>
-          <button  ion-button outline (click)='criarNotificacao()'> Cancelar </button>
-          <button  ion-button (click)='criarNotificacao()'> Notificar </button>
-      </ion-item>
-
+  <button ion-button outline (click)='criarNotificacao()'> Cancelar </button>
+  <button ion-button (click)='criarNotificacao()'> Notificar </button>
 </ion-content>

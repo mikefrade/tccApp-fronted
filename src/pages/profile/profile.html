@@ -10,14 +10,26 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Profile</ion-title>
+    <ion-title>Perfil</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  {{ email }}
-
-  <button ion-button round small (click)="verUserLogado()">Usuario</button>
+  <ion-card>
+    <ion-card-header>
+      <h1> {{ nome }} </h1>
+    </ion-card-header>
+    <ion-item>
+      <img src="assets/imgs/avatar_user.png" alt="logo">
+    </ion-item>
+    <ion-item>
+      <ion-label> {{ email }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <button ion-button block (click)="verUserLogado()">
+        <ion-icon name="person"></ion-icon> Dados do usuário </button>
+    </ion-item>
+  </ion-card>
 </ion-content>

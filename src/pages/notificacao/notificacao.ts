@@ -19,7 +19,8 @@ export class NotificacaoPage  {
 
   foto: string;
   cameraOn: boolean = false;
-
+  end: string;
+  
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public camera: Camera) {  }
 
@@ -27,12 +28,13 @@ export class NotificacaoPage  {
   
 
   ionViewDidLoad() {
+    this.end = this.navParams.get('endereco');
 
     console.log('ionViewDidLoad NotificacaoPage');
   }
 
   criarNotificacao(){
-    var pos = this.navParams.get('posicao');
+  
    // alert(pos);
    // var obj = JSON.parse(pos);
    // this.principalPage.criarMarcador('Criei um marcador', 'red', obj);
@@ -54,6 +56,29 @@ export class NotificacaoPage  {
      this.foto = 'data:image/png;base64,' + imageData;
      this.cameraOn = false;
     }, (err) => {
+      this.cameraOn = false;
+     // Handle error
+    });
+  
+  }
+
+  getGalleryPicture(){
+    this.cameraOn = true;
+    const options: CameraOptions = {
+      quality: 100,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    
+    this.camera.getPicture(options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64:
+     this.foto = 'data:image/png;base64,' + imageData;
+     this.cameraOn = false;
+    }, (err) => {
+      this.cameraOn = false;
      // Handle error
     });
   

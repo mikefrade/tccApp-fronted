@@ -17,6 +17,7 @@ import { StorageService } from '../../services/storage.service';
 export class ProfilePage {
 
   email: string;
+  nome: string;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: StorageService) {
@@ -26,6 +27,7 @@ export class ProfilePage {
     let localUser = this.storage.getLocalUser();
     if (localUser && localUser.email){
       this.email = localUser.email;
+      this.nome = localUser.nome;
     }
   }
 

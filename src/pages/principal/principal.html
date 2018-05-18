@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title> Notificar Problema </ion-title>
+    <ion-title> Notificar Problemas - BH </ion-title>
 
 
   </ion-navbar>
@@ -14,12 +14,10 @@
 <ion-content>
 
   <div id="map_canvas">
-      <span class="smallPanel">
+      <span id="smallPanel">
       <input ion-input [(ngModel)]="search_address">
-      <button ion-button outline item-end icon-left (click)="procurarEnd_click($event)">
-        <ion-icon name="search"></ion-icon>
-        Pesquisar
-      </button>
+      <button ion-button small round (click)="procurarEnd_click($event)">
+        <ion-icon name="search"></ion-icon></button>
       </span>
   </div>
 </ion-content>

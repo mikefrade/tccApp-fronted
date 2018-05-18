@@ -3,6 +3,8 @@ import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Component } from '@angular/core/';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
+import { NativeGeocoder, NativeGeocoderReverseResult, NativeGeocoderForwardResult } from '@ionic-native/native-geocoder';
+
 /**
  * Generated class for the PrincipalPage page.
  *
@@ -14,7 +16,7 @@ import {
   GoogleMaps, GoogleMap, GoogleMapsEvent,
   GoogleMapOptions, CameraPosition, MarkerOptions,
   Marker, LatLng,
-  Geocoder, BaseArrayClass, GeocoderResult,
+  Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest,
 } from '@ionic-native/google-maps';
 import { StorageService } from '../../services/storage.service';
 
@@ -34,7 +36,8 @@ export class PrincipalPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public geolocation: Geolocation,
-    public auth: AuthService) {
+    public auth: AuthService,
+    private nativeGeocoder: NativeGeocoder) {
   }
 
   ionViewDidLoad() {
@@ -67,9 +70,11 @@ export class PrincipalPage {
         'camera': { 'target': latlng, 'zoom': 16, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
-
-
-        this.navCtrl.push('NotificacaoPage', { posicao: data });
+       let obj = JSON.parse(data);
+       let endereco = this.coordenadas_End(obj.lat,obj.lng);
+      // alert( ' A: ' + a  + 'B: ' + b + ' B.lat: '+ b.lat);
+     
+      //this.navCtrl.push('NotificacaoPage', { enderco: endereco });
       });
     });
   }
@@ -85,6 +90,17 @@ export class PrincipalPage {
     //    alert('Eu cliquei no marcador!Iuuu');
     //   });
     // });
+  }
+
+  coordenadas_End(lt,lg) {
+
+    this.nativeGeocoder.reverseGeocode(lt, lg)
+    .then((result: NativeGeocoderReverseResult) => 
+      alert(JSON.stringify(result))
+  )
+    .catch((error: any) => {
+     return null
+    });
   }
 
 

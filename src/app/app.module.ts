@@ -9,6 +9,7 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 import { AuthService } from '../services/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 import { StorageService } from '../services/storage.service';
+import { NativeGeocoder } from '@ionic-native/native-geocoder';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { StorageService } from '../services/storage.service';
     AuthService,
     Facebook,
      {provide: ErrorHandler, useClass: IonicErrorHandler},
-    StorageService
+    StorageService,
+    NativeGeocoder
   ]
 })
 export class AppModule {}
