@@ -29,6 +29,7 @@ export class PrincipalPage {
   map: GoogleMap;
   clickable: boolean = true;
   lat: any; lng: any;
+  endereco: string;
 
   isRunning: boolean = false;
   search_address: any;
@@ -51,7 +52,7 @@ export class PrincipalPage {
       this.loadMap(geoposition);
     }).catch((error) => {
       // console.log('Erro ao obter a localização', error);
-      // alert ('Erro ao obter a localização'+  error);
+      alert('Erro ao obter a localização' + error);
     });
   }
 
@@ -67,14 +68,13 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 16, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
-       let obj = JSON.parse(data);
-       let endereco = this.coordenadas_End(obj.lat,obj.lng);
-      // alert( ' A: ' + a  + 'B: ' + b + ' B.lat: '+ b.lat);
-     
-      //this.navCtrl.push('NotificacaoPage', { enderco: endereco });
+        let obj = JSON.parse(data);
+        let end = this.coordenadas_End(obj.lat, obj.lng);
+   
+ 
       });
     });
   }
@@ -92,15 +92,20 @@ export class PrincipalPage {
     // });
   }
 
-  coordenadas_End(lt,lg) {
+  coordenadas_End(lt, lg) {
 
     this.nativeGeocoder.reverseGeocode(lt, lg)
-    .then((result: NativeGeocoderReverseResult) => 
-      alert(JSON.stringify(result))
-  )
-    .catch((error: any) => {
-     return null
-    });
+      .then((result: NativeGeocoderReverseResult) => {
+        let obj = JSON.stringify(result);
+
+        let r = obj.substring(1, (obj.length - 1));
+        let resultado = JSON.parse(r);
+        this.endereco = resultado.thoroughfare + ', ' + resultado.subThoroughfare + '. Bairro: ' + resultado.subLocality + '. ' + resultado.locality + ' - ' + resultado.administrativeArea;
+        this.navCtrl.push('NotificacaoPage', { endereco: this.endereco });;
+      }
+
+      )
+      .catch((error: any) => console.log(error));
   }
 
 
@@ -117,7 +122,7 @@ export class PrincipalPage {
       }
       return this.map.animateCamera({
         'target': results[0].position,
-        'zoom': 16
+        'zoom': 17
       }).then(() => {
         this.isRunning = false;
       });

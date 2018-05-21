@@ -19,6 +19,11 @@
       <h2>Problema</h2>
     </ion-card-header>
     <ion-item>
+      <ion-label stacked>Endereço: </ion-label>
+    </ion-item>
+    <p> {{ end }} </p>
+
+    <ion-item>
       <ion-label> Foto: </ion-label>
     </ion-item>
     <ion-item *ngIf="foto">
@@ -27,10 +32,6 @@
     <ion-item>
       <button ion-button (click)="getCameraPicture()" [disabled]="cameraOn"> Câmera </button>
       <button ion-button (click)="getGalleryPicture()" [disabled]="cameraOn"> Galeria </button>
-    </ion-item>
-    <ion-item>
-      <ion-label stacked>Endereço: </ion-label>
-      <ion-label> {{ end }}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>Categoria: </ion-label>
