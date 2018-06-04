@@ -1,4 +1,4 @@
-import { ToastController } from 'ionic-angular';
+import { ToastController, LoadingController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { Injectable } from '@angular/core';
 import { LocalUser } from '../models/local_user';
@@ -8,18 +8,35 @@ import { StorageService } from './storage.service';
 @Injectable()
 export class AuthService {
 
-    constructor(public facebook: Facebook,
+
+    isLoggedIn: boolean = false;
+    users: any;
+
+    constructor(public fb: Facebook,
         private toastCtrl: ToastController,
-        public storage: StorageService) {
+        public storage: StorageService
+    ) {
+
+        fb.getLoginStatus()
+            .then(res => {
+                console.log(res.status);
+                if (res.status === "connect") {
+                    this.isLoggedIn = true;
+                } else {
+                    this.isLoggedIn = false;
+                }
+            })
+            .catch(e => console.log(e));
 
     }
 
-    loginFacebook() {
+    /*loginFacebook() {
         return this.facebook.login(['public_profile', 'email'])
             .then((response: FacebookLoginResponse) => {
                 let params = new Array<string>();
                 this.facebook.api("/me?fields=name,email", params)
                     .then(res => {
+                        let loader = this.presentLoading();
                         let user: LocalUser = {
                             token: response.authResponse.accessToken,
                             nome: res.name,
@@ -27,17 +44,52 @@ export class AuthService {
                             senha: res.id
                         };
                         this.storage.setLocalUser(user);
+                        loader.dismiss();
                     }, (error) => {
                         alert(error);
-                        console.log('ERRO LOGIN: ', error);
                     })
             }, (error) => {
                 alert(error);
             });
+    }*/
+
+    login() {
+        return this.fb.login(['public_profile', 'user_friends', 'email'])
+            .then(res => {
+                if (res.status === "connected") {
+                    this.isLoggedIn = true;
+                    this.getUserDetail(res.authResponse.userID);
+                } else {
+                    this.isLoggedIn = false;
+                }
+            })
+            .catch(e => console.log('Error logging into Facebook', e));
+    }
+
+    getUserDetail(userid) {
+        this.fb.api("/" + userid + "/?fields=id,email,name,picture", ["public_profile"])
+            .then(res => {
+                this.users = res;
+
+                /* let loader = this.presentLoading();
+                        let user: LocalUser = {
+                            token: res.authResponse.accessToken,
+                            nome: res.name,
+                            email: res.email,
+                            senha: res.id,
+                            imgprofile: res.picture.data.url
+                        };
+                        this.storage.setLocalUser(user);
+                        loader.dismiss();*/
+            })
+            .catch(e => {
+                alert(e);
+            });
     }
 
     logoffFacebook() {
-        this.storage.setLocalUser(null);
-        return this.facebook.logout();
+        //s this.storage.setLocalUser(null);
+        return this.fb.logout().then(res => this.isLoggedIn = false)
+            .catch(e => console.log('Error logout from Facebook', e));
     }
 }

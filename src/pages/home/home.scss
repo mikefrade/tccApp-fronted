@@ -19,7 +19,14 @@ page-home {
 
     button{
         position: absolute;
-        top:100px; /* posiciona a 70px para baixo */
+        top:100px; 
+    }
+
+    ion-card{
+        align-self: center;
+        margin: auto;
+        display: block;
+        padding: 10px;
     }
 
 }

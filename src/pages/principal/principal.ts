@@ -1,8 +1,8 @@
 
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { Component } from '@angular/core/';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Searchbar } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
+import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { NativeGeocoder, NativeGeocoderReverseResult, NativeGeocoderForwardResult } from '@ionic-native/native-geocoder';
 
 /**
@@ -19,6 +19,7 @@ import {
   Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest,
 } from '@ionic-native/google-maps';
 import { StorageService } from '../../services/storage.service';
+//import { LocationAccuracy} from '@ionic-native/location-accuracy';
 
 @IonicPage()
 @Component({
@@ -34,31 +35,62 @@ export class PrincipalPage {
   isRunning: boolean = false;
   search_address: any;
 
+  @ViewChild('searchbar', { read: ElementRef }) searchbarRef: ElementRef;
+  @ViewChild('searchbar') searchbarElement: Searchbar;
+  search: boolean = false;
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public geolocation: Geolocation,
     public auth: AuthService,
-    private nativeGeocoder: NativeGeocoder) {
+    private nativeGeocoder: NativeGeocoder    //private locationAccuracy: LocationAccuracy
+  ) {
   }
 
   ionViewDidLoad() {
-
-    this.geolocateNative();
+    //  this.ativarlocal();
+    this.loadMap();
   }
+
+  /* ativarlocal(){
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+
+      if(canRequest) {
+        // the accuracy option will be ignored by iOS
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+          () => console.log('Request successful'),
+          error => console.log('Error requesting location permissions', error)
+        );
+      }
+    
+    });
+  } */
 
   geolocateNative() {
     this.geolocation.getCurrentPosition().then((geoposition: Geoposition) => {
       // console.log(geoposition);
-      this.loadMap(geoposition);
+
+      let latlng: LatLng = new LatLng(geoposition.coords.latitude, geoposition.coords.longitude);
+
+      try{
+        return this.map.animateCamera({
+          'target': latlng,
+          'zoom': 17
+        })
+      } catch {
+       alert( 'Ative a localização do seu celular!');
+      }
+     
+
     }).catch((error) => {
       // console.log('Erro ao obter a localização', error);
-      alert('Erro ao obter a localização' + error);
+      alert('Erro ao obter a localização: ' + error );
     });
   }
 
-  loadMap(position) {
-    this.search_address = 'Barro Preto, BH';
-    let latlng: LatLng = new LatLng(position.coords.latitude, position.coords.longitude);
+  loadMap() {
+    // this.search_address = 'Barro Preto, BH';
+    let latlng: LatLng = new LatLng(-19.8157, -43.9542);
     this.map = GoogleMaps.create('map_canvas');
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       this.map.setMyLocationEnabled(true);
@@ -68,16 +100,19 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 17, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 13, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         let obj = JSON.parse(data);
-        let end = this.coordenadas_End(obj.lat, obj.lng);
-   
- 
+        this.coordenadas_End(obj.lat, obj.lng);
+
+
       });
     });
+    this.geolocateNative();
   }
+
+
   criarMarcador(titulo, coricone, posicao) {
     this.map.addMarker({
       title: titulo,
@@ -132,6 +167,7 @@ export class PrincipalPage {
       //  'title':  JSON.stringify(results[0].position)
       //});
     })
+    this.search = false;
     // .then((marker: Marker) => {
     // Move to the position
     // this.map.animateCamera({
@@ -143,6 +179,15 @@ export class PrincipalPage {
     //    this.isRunning = false;
     //  });
     //  });
+  }
+
+  toggleSearch() {
+    if (this.search) {
+      this.search = false;
+    } else {
+      this.search = true;
+      this.searchbarElement.setFocus();
+    }
   }
 }
 

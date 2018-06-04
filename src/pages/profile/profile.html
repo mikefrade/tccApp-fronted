@@ -22,14 +22,13 @@
       <h1> {{ nome }} </h1>
     </ion-card-header>
     <ion-item>
-      <img src="assets/imgs/avatar_user.png" alt="logo">
+
+        <img src="{{profileimg}}" width="100"   alt="{{auth.users.name}}" />
+ 
     </ion-item>
     <ion-item>
       <ion-label> {{ email }}</ion-label>
     </ion-item>
-    <ion-item>
-      <button ion-button block (click)="verUserLogado()">
-        <ion-icon name="person"></ion-icon> Dados do usuário </button>
-    </ion-item>
+    
   </ion-card>
 </ion-content>

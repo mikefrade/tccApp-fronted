@@ -3,6 +3,7 @@ export interface LocalUser{
     nome: string;
     email: string;
     senha: string;
+    imgprofile: ImageData;
 
 
 }

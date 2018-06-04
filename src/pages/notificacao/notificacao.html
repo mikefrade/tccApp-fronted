@@ -24,22 +24,38 @@
     <p> {{ end }} </p>
 
     <ion-item>
-      <ion-label> Foto: </ion-label>
+      <ion-label stacked> Foto: </ion-label>
     </ion-item>
+    <ion-item>
+        <button ion-button outline round  (click)="getCameraPicture()" [disabled]="cameraOn">
+          <ion-icon name="camera"></ion-icon>
+        </button>
+        <button ion-button outline round  (click)="getGalleryPicture()" [disabled]="cameraOn">
+          <ion-icon name="image"></ion-icon>
+        </button>
+      </ion-item>
     <ion-item *ngIf="foto">
       <img [src]="foto">
     </ion-item>
+
     <ion-item>
-      <button ion-button (click)="getCameraPicture()" [disabled]="cameraOn"> Câmera </button>
-      <button ion-button (click)="getGalleryPicture()" [disabled]="cameraOn"> Galeria </button>
-    </ion-item>
-    <ion-item>
-      <ion-label>Categoria: </ion-label>
+      <ion-label stacked>Categoria: </ion-label>
       <ion-select [(ngModel)]="categoria">
         <ion-option value="saude">Saúde</ion-option>
-        <ion-option value="educacao">Educação</ion-option>
+        <ion-option value="seguranca">Segurança</ion-option>
+        <ion-option value="edcucacao">Educação</ion-option>
+        <ion-option value="drogas">Drogas</ion-option>
         <ion-option value="iluminacao">Iluminação Pública</ion-option>
         <ion-option value="via">Via Pública</ion-option>
+        <ion-option value="parques_pracas">Parques/Praças</ion-option>
+        <ion-option value="limpeza">Limpeza Urbana</ion-option>
+        <ion-option value="saneamento">Saneamento</ion-option>
+        <ion-option value="transporte">Transporte</ion-option>
+        <ion-option value="transito">Trânsito</ion-option>
+        <ion-option value="esporte_lazer">Esporte/Lazer</ion-option>       
+        <ion-option value="sinalizacao">Sinalização</ion-option>
+        <ion-option value="obras">Obras</ion-option>
+        <ion-option value="fiscalizacao">Fiscalização</ion-option>
         <ion-option value="outros">Outros</ion-option>
       </ion-select>
     </ion-item>
@@ -48,6 +64,5 @@
       <ion-textarea type="text"> </ion-textarea>
     </ion-item>
   </ion-card>
-  <button ion-button outline (click)='criarNotificacao()'> Cancelar </button>
   <button ion-button (click)='criarNotificacao()'> Notificar </button>
 </ion-content>

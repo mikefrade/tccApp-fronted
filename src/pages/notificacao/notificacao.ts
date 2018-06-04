@@ -20,6 +20,7 @@ export class NotificacaoPage  {
   foto: string;
   cameraOn: boolean = false;
   end: string;
+  categoria: any;
   
   constructor(public navCtrl: NavController, public navParams: NavParams,
   public camera: Camera) {  }

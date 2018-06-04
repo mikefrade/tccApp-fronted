@@ -3,7 +3,12 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title> Notificar Problemas - BH </ion-title>
+    <ion-title> NotificaBH </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="toggleSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -11,10 +16,12 @@
 
 <ion-content>
   <div id="map_canvas">
-      <span id="smallPanel">
-      <input ion-input [(ngModel)]="search_address">
+    <span id="smallPanel" #searchbar [hidden]="!search">
+
+      <input ion-input clearInput placeholder="Barro Preto - BH" [(ngModel)]="search_address" value="Belo Horizonte, Minas Gerais">
       <button ion-button small round (click)="procurarEnd_click($event)">
-        <ion-icon name="search"></ion-icon></button>
-      </span>
+        <ion-icon name="search">  </ion-icon>
+      </button>
+    </span>
   </div>
 </ion-content>
