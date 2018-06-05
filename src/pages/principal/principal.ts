@@ -19,6 +19,9 @@ import {
   Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest,
 } from '@ionic-native/google-maps';
 import { StorageService } from '../../services/storage.service';
+import { UsuarioService } from '../../services/domain/usuario.service';
+import { NotificacaoDTO } from '../../models/notificacao.dto';
+import { NotificacaoService } from '../../services/domain/notificacao.service';
 //import { LocationAccuracy} from '@ionic-native/location-accuracy';
 
 @IonicPage()
@@ -34,6 +37,7 @@ export class PrincipalPage {
 
   isRunning: boolean = false;
   search_address: any;
+  items: NotificacaoDTO[];
 
   @ViewChild('searchbar', { read: ElementRef }) searchbarRef: ElementRef;
   @ViewChild('searchbar') searchbarElement: Searchbar;
@@ -43,12 +47,27 @@ export class PrincipalPage {
     public navParams: NavParams,
     public geolocation: Geolocation,
     public auth: AuthService,
-    private nativeGeocoder: NativeGeocoder    //private locationAccuracy: LocationAccuracy
+    private nativeGeocoder: NativeGeocoder,    //private locationAccuracy: LocationAccuracy
+    public usuarioService: UsuarioService,
+    public notificacaoService: NotificacaoService
   ) {
   }
 
   ionViewDidLoad() {
     //  this.ativarlocal();
+    this.notificacaoService.findAll()
+      .subscribe(response => {
+        this.items = response;
+      },
+        error => {
+          alert("Errrorrrrrrr: " + JSON.stringify(error));
+        });
+    //  alert(auth.a);
+    this.usuarioService.find(this.auth.users.email) .subscribe(response => {
+      alert(JSON.stringify(response));
+    }, error => {
+      alert("Error usurio: " + JSON.stringify(error));
+    });
     this.loadMap();
   }
 
@@ -72,19 +91,19 @@ export class PrincipalPage {
 
       let latlng: LatLng = new LatLng(geoposition.coords.latitude, geoposition.coords.longitude);
 
-      try{
+      try {
         return this.map.animateCamera({
           'target': latlng,
           'zoom': 17
         })
       } catch {
-       alert( 'Ative a localização do seu celular!');
+        alert('Ative a localização do seu celular!');
       }
-     
+
 
     }).catch((error) => {
       // console.log('Erro ao obter a localização', error);
-      alert('Erro ao obter a localização: ' + error );
+      alert('Erro ao obter a localização: ' + error);
     });
   }
 
@@ -100,13 +119,11 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 13, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 14, 'tilt': 30 }
       });
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         let obj = JSON.parse(data);
         this.coordenadas_End(obj.lat, obj.lng);
-
-
       });
     });
     this.geolocateNative();
@@ -189,5 +206,13 @@ export class PrincipalPage {
       this.searchbarElement.setFocus();
     }
   }
+
+  doRefresh(refresher) {
+    this.loadMap();
+    setTimeout(() => {
+      refresher.complete();
+    }, 2000);
+  }
+
 }
 

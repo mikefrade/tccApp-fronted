@@ -10,6 +10,9 @@ import { AuthService } from '../services/auth.service';
 import { Facebook } from '@ionic-native/facebook';
 import { StorageService } from '../services/storage.service';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
+import { HttpClientModule } from '@angular/common/http';  
+import { UsuarioService } from '../services/domain/usuario.service';
+import { NotificacaoService } from '../services/domain/notificacao.service';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,7 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
   ],
   bootstrap: [IonicApp],
@@ -32,7 +36,9 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
     Facebook,
      {provide: ErrorHandler, useClass: IonicErrorHandler},
     StorageService,
-    NativeGeocoder
+    NativeGeocoder,
+    UsuarioService,
+    NotificacaoService,
   ]
 })
 export class AppModule {}

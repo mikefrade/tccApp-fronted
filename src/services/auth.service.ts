@@ -3,6 +3,8 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { Injectable } from '@angular/core';
 import { LocalUser } from '../models/local_user';
 import { StorageService } from './storage.service';
+import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../config/api.config';
 
 
 @Injectable()
@@ -12,8 +14,10 @@ export class AuthService {
     isLoggedIn: boolean = false;
     users: any;
 
+
     constructor(public fb: Facebook,
         private toastCtrl: ToastController,
+        public http: HttpClient,
         public storage: StorageService
     ) {
 
@@ -70,6 +74,20 @@ export class AuthService {
         this.fb.api("/" + userid + "/?fields=id,email,name,picture", ["public_profile"])
             .then(res => {
                 this.users = res;
+
+                let body = {
+                    "nome": this.users.name,
+                    "email": this.users.email
+                };
+                this.http.put(`${API_CONFIG.baseUrl}/usuarios/${this.users.email}`,
+                    body).subscribe(
+                        response => {
+                            console.log(response);
+                        },
+                        error => {
+                            alert(error.text());
+                            console.log(error);
+                        });
 
                 /* let loader = this.presentLoading();
                         let user: LocalUser = {
