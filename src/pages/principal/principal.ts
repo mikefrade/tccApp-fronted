@@ -34,7 +34,6 @@ export class PrincipalPage {
   clickable: boolean = true;
   lat: any; lng: any;
   endereco: string;
-
   isRunning: boolean = false;
   search_address: any;
   items: NotificacaoDTO[];
@@ -48,11 +47,8 @@ export class PrincipalPage {
     public geolocation: Geolocation,
     public auth: AuthService,
     private nativeGeocoder: NativeGeocoder,    //private locationAccuracy: LocationAccuracy
-    public usuarioService: UsuarioService,
-    public notificacaoService: NotificacaoService
-  ) {
+    public notificacaoService: NotificacaoService) {
   }
-
   ionViewDidLoad() {
     //  this.ativarlocal();
     this.notificacaoService.findAll()
@@ -62,15 +58,9 @@ export class PrincipalPage {
         error => {
           alert("Errrorrrrrrr: " + JSON.stringify(error));
         });
-    //  alert(auth.a);
-    this.usuarioService.find(this.auth.users.email) .subscribe(response => {
-      alert(JSON.stringify(response));
-    }, error => {
-      alert("Error usurio: " + JSON.stringify(error));
-    });
+   
     this.loadMap();
   }
-
   /* ativarlocal(){
     this.locationAccuracy.canRequest().then((canRequest: boolean) => {
 
@@ -84,13 +74,9 @@ export class PrincipalPage {
     
     });
   } */
-
   geolocateNative() {
     this.geolocation.getCurrentPosition().then((geoposition: Geoposition) => {
-      // console.log(geoposition);
-
       let latlng: LatLng = new LatLng(geoposition.coords.latitude, geoposition.coords.longitude);
-
       try {
         return this.map.animateCamera({
           'target': latlng,
@@ -99,15 +85,13 @@ export class PrincipalPage {
       } catch {
         alert('Ative a localização do seu celular!');
       }
-
-
     }).catch((error) => {
       // console.log('Erro ao obter a localização', error);
       alert('Erro ao obter a localização: ' + error);
     });
   }
-
   loadMap() {
+    //alert("Bem vindo! " + localStorage.getItem('usuarioDTO'));
     // this.search_address = 'Barro Preto, BH';
     let latlng: LatLng = new LatLng(-19.8157, -43.9542);
     this.map = GoogleMaps.create('map_canvas');
@@ -128,8 +112,6 @@ export class PrincipalPage {
     });
     this.geolocateNative();
   }
-
-
   criarMarcador(titulo, coricone, posicao) {
     this.map.addMarker({
       title: titulo,
@@ -143,24 +125,17 @@ export class PrincipalPage {
     //   });
     // });
   }
-
   coordenadas_End(lt, lg) {
-
     this.nativeGeocoder.reverseGeocode(lt, lg)
       .then((result: NativeGeocoderReverseResult) => {
         let obj = JSON.stringify(result);
-
         let r = obj.substring(1, (obj.length - 1));
         let resultado = JSON.parse(r);
         this.endereco = resultado.thoroughfare + ', ' + resultado.subThoroughfare + '. Bairro: ' + resultado.subLocality + '. ' + resultado.locality + ' - ' + resultado.administrativeArea;
         this.navCtrl.push('NotificacaoPage', { endereco: this.endereco });;
-      }
-
-      )
+      })
       .catch((error: any) => console.log(error));
   }
-
-
   procurarEnd_click(event) {
     // Address -> latitude,longitude
     Geocoder.geocode({
@@ -174,7 +149,7 @@ export class PrincipalPage {
       }
       return this.map.animateCamera({
         'target': results[0].position,
-        'zoom': 17
+        'zoom': 16
       }).then(() => {
         this.isRunning = false;
       });
@@ -197,7 +172,6 @@ export class PrincipalPage {
     //  });
     //  });
   }
-
   toggleSearch() {
     if (this.search) {
       this.search = false;
@@ -206,13 +180,11 @@ export class PrincipalPage {
       this.searchbarElement.setFocus();
     }
   }
-
   doRefresh(refresher) {
     this.loadMap();
     setTimeout(() => {
       refresher.complete();
     }, 2000);
   }
-
 }
 

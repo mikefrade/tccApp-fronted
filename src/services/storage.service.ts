@@ -1,23 +1,23 @@
 import { Injectable } from "@angular/core";
 import { STORAGE_KEYS } from "../config/storage_keys.config";
-import { LocalUser } from "../models/local_user";
+import { UsuarioDTO } from "../models/usuario.dto";
 
 @Injectable()
 export class StorageService{
-    getLocalUser(): LocalUser{
-        let usr = localStorage.getItem(STORAGE_KEYS.localUser);
+    getUsuarioDTO(): UsuarioDTO{
+        let usr = localStorage.getItem(STORAGE_KEYS.usuarioDTO);
         if (usr == null){
             return null;
         } else {
-            return JSON.parse(usr);
+            return JSON.parse(usr); 
         }
 
     }
-    setLocalUser(obj: LocalUser){
+    setUsuarioDTO(obj: UsuarioDTO){
         if ( obj == null){
-            localStorage.removeItem(STORAGE_KEYS.localUser);
+            localStorage.removeItem(STORAGE_KEYS.usuarioDTO);
         } else{
-            localStorage.setItem(STORAGE_KEYS.localUser, JSON.stringify(obj));
+            localStorage.setItem(STORAGE_KEYS.usuarioDTO, JSON.stringify(obj));
         }
 
     }
