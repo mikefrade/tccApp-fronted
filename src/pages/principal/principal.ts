@@ -51,15 +51,10 @@ export class PrincipalPage {
   }
   ionViewDidLoad() {
     //  this.ativarlocal();
-    this.notificacaoService.findAll()
-      .subscribe(response => {
-        this.items = response;
-      },
-        error => {
-          alert("Errrorrrrrrr: " + JSON.stringify(error));
-        });
-   
-    this.loadMap();
+    this.loadMap().then(() => {
+      this.geolocateNative();
+      this.carregarAllMarcadores();
+    });
   }
   /* ativarlocal(){
     this.locationAccuracy.canRequest().then((canRequest: boolean) => {
@@ -95,7 +90,7 @@ export class PrincipalPage {
     // this.search_address = 'Barro Preto, BH';
     let latlng: LatLng = new LatLng(-19.8157, -43.9542);
     this.map = GoogleMaps.create('map_canvas');
-    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+    return this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       this.map.setMyLocationEnabled(true);
       this.map.setOptions({
         'controls': {
@@ -105,25 +100,52 @@ export class PrincipalPage {
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
         'camera': { 'target': latlng, 'zoom': 14, 'tilt': 30 }
       });
+
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
         let obj = JSON.parse(data);
         this.coordenadas_End(obj.lat, obj.lng);
       });
     });
-    this.geolocateNative();
   }
-  criarMarcador(titulo, coricone, posicao) {
-    this.map.addMarker({
+  carregarAllMarcadores() {
+    this.notificacaoService.findAll()
+      .subscribe(response => {
+        this.items = response;
+        for(let i in this.items) {
+          let notificacao = this.items[i];
+          let tituloInfo = notificacao.nomeuser;
+          let corpoInfo = 
+          'Categoria: ' + notificacao.categoria  + 
+          '. Ocorrência: ' + notificacao.descricao +
+          '. Data e Hora: ' + notificacao.logHora + 
+          '. Endereço: ' + notificacao.endereco ;
+
+          let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
+          let icone = 'red';
+          this.criarMarcador(notificacao.categoria, icone, uluru, tituloInfo, corpoInfo);
+        }
+      },
+        error => {
+          alert("Errrorrrrrrr: " + JSON.stringify(error));
+        });
+  }
+  
+  criarMarcador(titulo, coricone, posicao, tituloInfo, corpoInfo) {
+      this.map.addMarker({
       title: titulo,
       icon: coricone,
       animation: 'DROP',
       position: posicao
-    })//.then(marker => {
-    // marker.on(GoogleMapsEvent.MARKER_CLICK)
-    //   .subscribe(() => {
-    //    alert('Eu cliquei no marcador!Iuuu');
-    //   });
-    // });
+    })
+      .then(marker => {
+        marker.on(GoogleMapsEvent.MARKER_CLICK)
+          .subscribe((params) => {
+              let marker: Marker = params[1];
+              marker.setTitle(tituloInfo);
+              marker.setSnippet(corpoInfo);
+              marker.showInfoWindow();
+            });
+      });
   }
   coordenadas_End(lt, lg) {
     this.nativeGeocoder.reverseGeocode(lt, lg)
@@ -159,7 +181,7 @@ export class PrincipalPage {
       //  'title':  JSON.stringify(results[0].position)
       //});
     })
-    this.search = false;
+
     // .then((marker: Marker) => {
     // Move to the position
     // this.map.animateCamera({
@@ -171,6 +193,7 @@ export class PrincipalPage {
     //    this.isRunning = false;
     //  });
     //  });
+    this.search = false;
   }
   toggleSearch() {
     if (this.search) {

@@ -29,7 +29,7 @@ export class HomePage {
   }
   login() {
     this.auth.login()
-    .then(response => {
+      .then(response => {
         this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'LOGIN EFETUADO!' });
         this.redirecionaPage();
       })
