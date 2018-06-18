@@ -56,14 +56,16 @@ export class AuthService {
     }*/
 
     login() {
-        return this.fb.login(['public_profile', 'user_friends', 'email'])
+        return this.fb.login(['public_profile', 'email'])
             .then(res => {
                 if (res.status === "connected") {
                     this.isLoggedIn = true;
                     let userid = res.authResponse.userID;
-                    this.fb.api("/" + userid + "/?fields=id,email,name,picture", ["public_profile"])
+                    this.fb.api("/" + userid + "/?fields=id,email,name,picture.width(720).height(720).as(picture_large)", [])
                         .then(res => {
-                            this.users = res;
+                            this.users = {email: res['email'], 
+                            picture: res['picture_large']['data']['url'], 
+                            name: res['name']};                                                
                             let body = {
                                 "nome": this.users.name,
                                 "email": this.users.email
@@ -92,29 +94,6 @@ export class AuthService {
             })
             .catch(e => console.log('Error logging into Facebook', e));
     }
-
-    /* getUserDetail(userid) {
-         this.fb.api("/" + userid + "/?fields=id,email,name,picture", ["public_profile"])
-             .then(res => {
-                 this.users = res;
-                 let body = {
-                     "nome": this.users.name,
-                     "email": this.users.email
-                 };
-                 this.http.put(`${API_CONFIG.baseUrl}/usuarios/${this.users.email}`,
-                     body).subscribe(
-                         response => {
-                             console.log(response);
-                         },
-                         error => {
-                             alert(error.text());
-                             console.log(error);
-                         });
-             })
-             .catch(e => {
-                 alert(e);
-             });
-     }*/
 
     successfulLogin() {
         this.usuarioService.find(this.users.email)

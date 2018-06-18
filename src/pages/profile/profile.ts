@@ -17,27 +17,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProfilePage {
 
-  email: string;
-  nome: string;
-  profileimg: any;
-
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: StorageService, public auth: AuthService) {
   }
 
   ionViewDidLoad() {
-   // let localUser = this.storage.getLocalUser();
-  /*  if (localUser && localUser.email){
-      this.email = localUser.email;
-      this.nome = localUser.nome;
-    }*/
-    this.profileimg = this.auth.users.picture.data.url;
-    this.nome = this.auth.users.name;
-    this.email = this.auth.users.email;
 
   }
-
-
-
 
 }

@@ -17,18 +17,11 @@
 
 
 <ion-content padding>
-  <ion-card>
-    <ion-card-header>
-      <h1> {{ nome }} </h1>
-    </ion-card-header>
-    <ion-item>
-
-        <img src="{{profileimg}}" width="100"   alt="{{auth.users.name}}" />
- 
-    </ion-item>
-    <ion-item>
-      <ion-label> {{ email }}</ion-label>
-    </ion-item>
-    
+  <ion-card *ngIf="auth.users">
+    <ion-card-header>{{ auth.users.name }}</ion-card-header>
+    <img [src]="auth.users.picture" />
+    <ion-card-content>
+      <p>Email: {{ auth.users.email }}</p>
+    </ion-card-content>
   </ion-card>
 </ion-content>
