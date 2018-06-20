@@ -1,4 +1,4 @@
 export const API_CONFIG = {
-    baseUrl: "https://tccapp-mikefrade.herokuapp.com/",
+    baseUrl: "http://192.168.1.7:8080",
     bucketBaseUrl: "https://s3-sa-east-1.amazonaws.com/tccapp-mikefrade"
 }

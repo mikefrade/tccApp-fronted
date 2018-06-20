@@ -1,4 +1,5 @@
 export interface NotificacaoDTO {
+        id: string;
         nomeuser: string;
         logHora:  string;
         latitude:  string;

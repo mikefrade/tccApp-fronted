@@ -32,29 +32,6 @@ export class AuthService {
             .catch(e => console.log(e));
     }
 
-    /*loginFacebook() {
-        return this.facebook.login(['public_profile', 'email'])
-            .then((response: FacebookLoginResponse) => {
-                let params = new Array<string>();
-                this.facebook.api("/me?fields=name,email", params)
-                    .then(res => {
-                        let loader = this.presentLoading();
-                        let user: LocalUser = {
-                            token: response.authResponse.accessToken,
-                            nome: res.name,
-                            email: res.email,
-                            senha: res.id
-                        };
-                        this.storage.setLocalUser(user);
-                        loader.dismiss();
-                    }, (error) => {
-                        alert(error);
-                    })
-            }, (error) => {
-                alert(error);
-            });
-    }*/
-
     login() {
         return this.fb.login(['public_profile', 'email'])
             .then(res => {

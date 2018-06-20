@@ -15,4 +15,9 @@ export class NotificacaoService {
         return this.http.get<NotificacaoDTO[]>(`${API_CONFIG.baseUrl}/notificacoes`);
     }
 
+    findByNotificacao(notificacao_id: string){
+        return this.http.get(`${API_CONFIG.baseUrl}/notificacoes/${notificacao_id}`);
+    }
+
+
 }

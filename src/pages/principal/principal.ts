@@ -98,7 +98,7 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 14, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 12, 'tilt': 30 }
       });
 
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
@@ -154,10 +154,15 @@ export class PrincipalPage {
         let r = obj.substring(1, (obj.length - 1));
         let resultado = JSON.parse(r);
         this.endereco = resultado.thoroughfare + ', ' + resultado.subThoroughfare + '. Bairro: ' + resultado.subLocality + '. ' + resultado.locality + ' - ' + resultado.administrativeArea;
-        this.navCtrl.push('NotificacaoPage', { endereco: this.endereco });;
+        this.showCriarNotificacao( this.endereco);
       })
       .catch((error: any) => console.log(error));
   }
+
+  showCriarNotificacao( endereco: string){
+    this.navCtrl.push('NotificacaoPage', { endereco:   endereco });
+  }
+
   procurarEnd_click(event) {
     // Address -> latitude,longitude
     Geocoder.geocode({
