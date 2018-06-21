@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
-import { GoogleMap, GoogleMapsEvent, Marker, LatLng, GoogleMaps } from '@ionic-native/google-maps';
+import { GoogleMap, GoogleMapsEvent, Marker, LatLng, GoogleMaps, HtmlInfoWindow } from '@ionic-native/google-maps';
 import { NotificacaoDTO } from '../../models/notificacao.dto';
+import { API_CONFIG } from '../../config/api.config';
 
 /**
  * Generated class for the MapaNotificacaoPage page.
@@ -19,37 +20,54 @@ import { NotificacaoDTO } from '../../models/notificacao.dto';
 export class MapaNotificacaoPage {
   map: GoogleMap;
   item: any;
+  bucketUrl: string = API_CONFIG.bucketBaseUrl;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-  public notificacaoService: NotificacaoService) {
+    public notificacaoService: NotificacaoService) {
   }
 
   ionViewDidLoad() {
     this.loadData();
   }
 
-  loadData(){
+  loadData() {
     let notificacao_id = this.navParams.get('notificacao_id');
     this.notificacaoService.findByNotificacao(notificacao_id)
-      .subscribe(response =>{
+      .subscribe(response => {
         this.item = response;
         let notificacao = this.item;
-        let tituloInfo = notificacao.usuario.nome;
-        let corpoInfo = 
-        'Categoria: ' + notificacao.categoria  + 
-        '. Ocorrência: ' + notificacao.descricao +
-        '. Data e Hora: ' + notificacao.logHora + 
-        '. Endereço: ' + notificacao.endereco ;
+        this.loadMap(notificacao.latitude, notificacao.longitude)
+          .then(() => {
+            let imagem = this.bucketUrl + "/not" + notificacao.id + ".jpg";
+            let htmlInfoWindow = new HtmlInfoWindow();
+            let frame: HTMLElement = document.createElement('div');
+            frame.innerHTML = [
+              '<h3>' + notificacao.usuario.nome + '</h3>' +
+              '<p><b> Categoria: ' + notificacao.categoria + '</b></p></p>' +
+              '<p> Descrição: ' + notificacao.descricao + '</p>' +
+              '<p> Data e Hora: ' + notificacao.logHora + '</p>' +
+              '<p> Endereço: ' + notificacao.endereco + '</p>',
+              '<img src="' + imagem + '">'
+            ].join("");
+            frame.getElementsByTagName("img")[0].addEventListener("click", () => {
+              // htmlInfoWindow.setBackgroundColor('red');
+            });
+            htmlInfoWindow.setContent(frame, { width: "270px", height: "380px" });
+            let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
+            this.map.addMarker({
+              title: notificacao.categoria,
+              position: uluru
+            })
+              .then(marker => {
+                marker.on(GoogleMapsEvent.MARKER_CLICK)
+                  .subscribe(() => {
+                    htmlInfoWindow.open(marker);
+                  });
+              });
+          });
+      },
+        error => {
 
-        let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
-        let icone = 'red';
-        this.loadMap(notificacao.latitude,notificacao.longitude)
-        .then(()=>{
-          this.criarMarcador(notificacao.categoria, icone, uluru, tituloInfo, corpoInfo);
         });
-    },
-      error =>{
-
-      });
   }
 
   loadMap(lat: string, lng: string) {
@@ -59,7 +77,7 @@ export class MapaNotificacaoPage {
       this.map.setMyLocationEnabled(true);
       this.map.setOptions({
         'controls': {
-          'compass': true, 'myLocationButton': true, 
+          'compass': true, 'myLocationButton': true,
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
@@ -68,22 +86,5 @@ export class MapaNotificacaoPage {
 
     });
   }
-  criarMarcador(titulo, coricone, posicao, tituloInfo, corpoInfo) {
-    this.map.addMarker({
-    title: titulo,
-    icon: coricone,
-    animation: 'DROP',
-    position: posicao
-  })
-    .then(marker => {
-      marker.on(GoogleMapsEvent.MARKER_CLICK)
-        .subscribe((params) => {
-            let marker: Marker = params[1];
-            marker.setTitle(tituloInfo);
-            marker.setSnippet(corpoInfo);
-            marker.showInfoWindow();
-          });
-    });
-}
-
+ 
 }

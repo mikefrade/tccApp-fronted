@@ -16,12 +16,13 @@ import {
   GoogleMaps, GoogleMap, GoogleMapsEvent,
   GoogleMapOptions, CameraPosition, MarkerOptions,
   Marker, LatLng,
-  Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest,
+  Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest, HtmlInfoWindow,
 } from '@ionic-native/google-maps';
 import { StorageService } from '../../services/storage.service';
 import { UsuarioService } from '../../services/domain/usuario.service';
 import { NotificacaoDTO } from '../../models/notificacao.dto';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
+import { API_CONFIG } from '../../config/api.config';
 //import { LocationAccuracy} from '@ionic-native/location-accuracy';
 
 @IonicPage()
@@ -37,6 +38,7 @@ export class PrincipalPage {
   isRunning: boolean = false;
   search_address: any;
   items: NotificacaoDTO[];
+  bucketUrl: string = API_CONFIG.bucketBaseUrl;
 
   @ViewChild('searchbar', { read: ElementRef }) searchbarRef: ElementRef;
   @ViewChild('searchbar') searchbarElement: Searchbar;
@@ -107,46 +109,46 @@ export class PrincipalPage {
       });
     });
   }
+
   carregarAllMarcadores() {
     this.notificacaoService.findAll()
       .subscribe(response => {
         this.items = response;
-        for(let i in this.items) {
+        for (let i in this.items) {
           let notificacao = this.items[i];
-          let tituloInfo = notificacao.nomeuser;
-          let corpoInfo = 
-          'Categoria: ' + notificacao.categoria  + 
-          '. Descrição: ' + notificacao.descricao +
-          '. Data e Hora: ' + notificacao.logHora + 
-          '. Endereço: ' + notificacao.endereco ;
-
+          let imagem = this.bucketUrl + "/not" + notificacao.id + ".jpg";
+          let htmlInfoWindow = new HtmlInfoWindow();
+          let frame: HTMLElement = document.createElement('div');
+          frame.innerHTML = [
+            '<h3>' + notificacao.nomeuser + '</h3>' +
+            '<p><b> Categoria: ' + notificacao.categoria  +  '</b></p></p>' +
+            '<p> Descrição: ' + notificacao.descricao + '</p>' +
+            '<p> Data e Hora: ' + notificacao.logHora + '</p>' +
+            '<p> Endereço: ' + notificacao.endereco + '</p>' ,
+            '<img src="'+ imagem +'">'          
+          ].join("");
+          frame.getElementsByTagName("img")[0].addEventListener("click", () => {
+           // htmlInfoWindow.setBackgroundColor('red');
+         });
+          htmlInfoWindow.setContent(frame, { width: "270px", height: "380px" });
           let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
-          let icone = 'red';
-          this.criarMarcador(notificacao.categoria, icone, uluru, tituloInfo, corpoInfo);
+          this.map.addMarker({
+            title: notificacao.categoria,     
+            position: uluru
+          })
+            .then(marker => {
+              marker.on(GoogleMapsEvent.MARKER_CLICK)
+                .subscribe(() => {
+                  htmlInfoWindow.open(marker);
+                });
+            });
         }
       },
         error => {
           alert("Errrorrrrrrr: " + JSON.stringify(error));
         });
   }
-  
-  criarMarcador(titulo, coricone, posicao, tituloInfo, corpoInfo) {
-      this.map.addMarker({
-      title: titulo,
-      icon: coricone,
-      animation: 'DROP',
-      position: posicao
-    })
-      .then(marker => {
-        marker.on(GoogleMapsEvent.MARKER_CLICK)
-          .subscribe((params) => {
-              let marker: Marker = params[1];
-              marker.setTitle(tituloInfo);
-              marker.setSnippet(corpoInfo);
-              marker.showInfoWindow();
-            });
-      });
-  }
+
   coordenadas_End(lt, lg) {
     this.nativeGeocoder.reverseGeocode(lt, lg)
       .then((result: NativeGeocoderReverseResult) => {
@@ -154,13 +156,13 @@ export class PrincipalPage {
         let r = obj.substring(1, (obj.length - 1));
         let resultado = JSON.parse(r);
         this.endereco = resultado.thoroughfare + ', ' + resultado.subThoroughfare + '. Bairro: ' + resultado.subLocality + '. ' + resultado.locality + ' - ' + resultado.administrativeArea;
-        this.showCriarNotificacao( this.endereco);
+        this.showCriarNotificacao(this.endereco);
       })
       .catch((error: any) => console.log(error));
   }
 
-  showCriarNotificacao( endereco: string){
-    this.navCtrl.push('NotificacaoPage', { endereco:   endereco });
+  showCriarNotificacao(endereco: string) {
+    this.navCtrl.push('NotificacaoPage', { endereco: endereco });
   }
 
   procurarEnd_click(event) {
