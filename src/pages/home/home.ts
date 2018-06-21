@@ -3,6 +3,7 @@ import { NavController, IonicPage, MenuController, LoadingController } from 'ion
 import { ToastController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
+import { UsuarioService } from '../../services/domain/usuario.service';
 
 
 @IonicPage()
@@ -18,7 +19,8 @@ export class HomePage {
     public auth: AuthService,
     public toastCtrl: ToastController,
     public storage: StorageService,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public usuarioService: UsuarioService
   ) {
   }
   ionViewWillEnter() {
@@ -27,6 +29,26 @@ export class HomePage {
   ionViewDidLeave() {
     this.menu.swipeEnable(true);
   }
+  ionViewDidEnter(){
+   
+   try{
+    this.usuarioService.find(this.storage.getUsuarioDTO().email)
+    .subscribe(response => {
+        let ob = JSON.stringify(response)
+        this.storage.setUsuarioDTO(JSON.parse(ob));
+        this.auth.isLoggedIn = true;
+        this.navCtrl.setRoot('PrincipalPage');
+        //alert("Bem vindo! " + localStorage.getItem('usuarioDTO'));
+    }, error => {
+        alert("Error usurio: " + JSON.stringify(error));
+    });
+   }catch(error){
+
+   }
+      
+  }
+
+
   login() {
     this.auth.login()
       .then(response => {

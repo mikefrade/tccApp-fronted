@@ -98,7 +98,7 @@ export class PrincipalPage {
           'indoorPicker': true, 'zoom': true
         },
         'gestures': { 'scroll': true, 'tilt': true, 'rotate': true, 'zoom': true },
-        'camera': { 'target': latlng, 'zoom': 12, 'tilt': 30 }
+        'camera': { 'target': latlng, 'zoom': 11, 'tilt': 30 }
       });
 
       this.map.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((data) => {
@@ -116,7 +116,7 @@ export class PrincipalPage {
           let tituloInfo = notificacao.nomeuser;
           let corpoInfo = 
           'Categoria: ' + notificacao.categoria  + 
-          '. Ocorrência: ' + notificacao.descricao +
+          '. Descrição: ' + notificacao.descricao +
           '. Data e Hora: ' + notificacao.logHora + 
           '. Endereço: ' + notificacao.endereco ;
 

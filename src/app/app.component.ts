@@ -25,7 +25,7 @@ export class MyApp {
       { title: 'Página Inicial', component: 'PrincipalPage' },
       { title: 'Minhas Notificações', component: 'MNotificacoesPage'},
       { title: 'Perfil', component: 'ProfilePage' },
-      { title: 'Logout', component: '' }
+      { title: 'Sair', component: '' }
     ];
 
   }
@@ -43,7 +43,7 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     switch (page.title){
-      case 'Logout':
+      case 'Sair':
       this.auth.logoffFacebook();
       this.nav.setRoot(HomePage);
       break;
