@@ -156,13 +156,14 @@ export class PrincipalPage {
         let r = obj.substring(1, (obj.length - 1));
         let resultado = JSON.parse(r);
         this.endereco = resultado.thoroughfare + ', ' + resultado.subThoroughfare + '. Bairro: ' + resultado.subLocality + '. ' + resultado.locality + ' - ' + resultado.administrativeArea;
-        this.showCriarNotificacao(this.endereco);
+        this.showCriarNotificacao(this.endereco, lt , lg);
       })
       .catch((error: any) => console.log(error));
   }
 
-  showCriarNotificacao(endereco: string) {
-    this.navCtrl.push('NotificacaoPage', { endereco: endereco });
+  showCriarNotificacao(endereco: string, lat: string, lng: string) {
+    this.navCtrl.push('NotificacaoPage', { endereco: endereco,
+    latitude: lat, longitude: lng });
   }
 
   procurarEnd_click(event) {

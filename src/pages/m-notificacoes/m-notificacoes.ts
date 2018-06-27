@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { NotificacaoDTO } from '../../models/notificacao.dto';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
 import { API_CONFIG } from '../../config/api.config';
+import { StorageService } from '../../services/storage.service';
 
 /**
  * Generated class for the MNotificacoesPage page.
@@ -21,11 +22,14 @@ export class MNotificacoesPage {
   bucketUrl: string = API_CONFIG.bucketBaseUrl;
   items: NotificacaoDTO[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public notificacaoService: NotificacaoService) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public notificacaoService: NotificacaoService,
+    public storage: StorageService,) {
   }
 
   ionViewDidLoad() {
-    this.notificacaoService.findAll()
+    this.notificacaoService.findByNotificacaoUser(this.storage.getUsuarioDTO().id)
     .subscribe(response => {
       this.items = response;
     },

@@ -13,6 +13,7 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder';
 import { HttpClientModule } from '@angular/common/http';  
 import { UsuarioService } from '../services/domain/usuario.service';
 import { NotificacaoService } from '../services/domain/notificacao.service';
+import { ImageUtilService } from '../services/domain/image-util.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { NotificacaoService } from '../services/domain/notificacao.service';
     NativeGeocoder,
     UsuarioService,
     NotificacaoService,
+    ImageUtilService
   ]
 })
 export class AppModule {}

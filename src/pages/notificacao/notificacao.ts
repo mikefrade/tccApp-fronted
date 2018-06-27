@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { CameraOptions, Camera } from '@ionic-native/camera';
+import { NotificacaoService } from '../../services/domain/notificacao.service';
 // import { PrincipalPage } from '../principal/principal';
 
 /**
@@ -15,34 +16,70 @@ import { CameraOptions, Camera } from '@ionic-native/camera';
   selector: 'page-notificacao',
   templateUrl: 'notificacao.html',
 })
-export class NotificacaoPage  {
+export class NotificacaoPage {
 
   foto: string;
   cameraOn: boolean = false;
   end: string;
+  latitude: string;
+  longitude: string;
+  descricao: string;
   categoria: any;
+  codNotificacao: string;
   
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-  public camera: Camera) {  }
 
-
-  
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public notificacaoService: NotificacaoService,
+    public camera: Camera,
+    public alertCtrl: AlertController) { }
 
   ionViewDidLoad() {
     this.end = this.navParams.get('endereco');
-
-    console.log('ionViewDidLoad NotificacaoPage');
+    this.latitude = this.navParams.get('latitude');
+    this.longitude = this.navParams.get('longitude');
   }
 
-  criarNotificacao(){
-  
-   // alert(pos);
-   // var obj = JSON.parse(pos);
-   // this.principalPage.criarMarcador('Criei um marcador', 'red', obj);
-    this.navCtrl.pop();
+  criarNotificacao() {
+    this.notificacaoService.criarNotificacao(this.latitude, this.longitude, this.end, this.categoria, this.descricao)
+      .subscribe(response => {
+        this.codNotificacao = this.notificacaoService.extractId(response.headers.get('location'));
+        this.sendPicuture();
+      },
+        error => {
+          alert(error.text());
+        });
   }
 
-  getCameraPicture(){
+  sendPicuture() {
+    this.notificacaoService.uploadPicture(this.foto, this.codNotificacao)
+      .subscribe(response => {
+        this.foto = null;
+        this.showInsertOk();
+      }, error => {
+
+      })
+  }
+
+  showInsertOk(){
+    let alert = this.alertCtrl.create({
+      title: 'Sucesso!',
+      message: 'Notificação criada com sucesso',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            this.navCtrl.setRoot('PrincipalPage');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+
+  getCameraPicture() {
     this.cameraOn = true;
     const options: CameraOptions = {
       quality: 100,
@@ -50,20 +87,18 @@ export class NotificacaoPage  {
       encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE
     }
-    
+
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64:
-     this.foto = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.foto = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
       this.cameraOn = false;
-     // Handle error
+      // Handle error
     });
-  
+
   }
 
-  getGalleryPicture(){
+  getGalleryPicture() {
     this.cameraOn = true;
     const options: CameraOptions = {
       quality: 100,
@@ -72,19 +107,14 @@ export class NotificacaoPage  {
       encodingType: this.camera.EncodingType.PNG,
       mediaType: this.camera.MediaType.PICTURE
     }
-    
+
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64:
-     this.foto = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.foto = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
       this.cameraOn = false;
-     // Handle error
+      // Handle error
     });
-  
+
   }
-
-
-
 }

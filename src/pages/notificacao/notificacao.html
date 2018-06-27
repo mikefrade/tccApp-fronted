@@ -41,28 +41,28 @@
     <ion-item>
       <ion-label stacked>Categoria: </ion-label>
       <ion-select [(ngModel)]="categoria">
-        <ion-option value="saude">Saúde</ion-option>
-        <ion-option value="seguranca">Segurança</ion-option>
-        <ion-option value="edcucacao">Educação</ion-option>
-        <ion-option value="drogas">Drogas</ion-option>
-        <ion-option value="iluminacao">Iluminação Pública</ion-option>
-        <ion-option value="via">Via Pública</ion-option>
-        <ion-option value="parques_pracas">Parques/Praças</ion-option>
-        <ion-option value="limpeza">Limpeza Urbana</ion-option>
-        <ion-option value="saneamento">Saneamento</ion-option>
-        <ion-option value="transporte">Transporte</ion-option>
-        <ion-option value="transito">Trânsito</ion-option>
-        <ion-option value="esporte_lazer">Esporte/Lazer</ion-option>       
-        <ion-option value="sinalizacao">Sinalização</ion-option>
-        <ion-option value="obras">Obras</ion-option>
-        <ion-option value="fiscalizacao">Fiscalização</ion-option>
-        <ion-option value="outros">Outros</ion-option>
+        <ion-option value="Saúde">Saúde</ion-option>
+        <ion-option value="Segurança">Segurança</ion-option>
+        <ion-option value="Educação">Educação</ion-option>
+        <ion-option value="Drogas">Drogas</ion-option>
+        <ion-option value="Iluminação Pública">Iluminação Pública</ion-option>
+        <ion-option value="Via Pública">Via Pública</ion-option>
+        <ion-option value="Parques/Praças">Parques/Praças</ion-option>
+        <ion-option value="Limpeza Urbana">Limpeza Urbana</ion-option>
+        <ion-option value="Saneamento Básico">Saneamento Básico</ion-option>
+        <ion-option value="Transporte">Transporte</ion-option>
+        <ion-option value="Trânsito">Trânsito</ion-option>
+        <ion-option value="Esporte/Lazer">Esporte/Lazer</ion-option>       
+        <ion-option value="Sinalização">Sinalização</ion-option>
+        <ion-option value="Obras">Obras</ion-option>
+        <ion-option value="Fiscalização">Fiscalização</ion-option>
+        <ion-option value="Outros">Outros</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label stacked>Descrição: </ion-label>
-      <ion-textarea type="text"> </ion-textarea>
+      <ion-textarea type="text" [(ngModel)]="descricao"> </ion-textarea>
     </ion-item>
   </ion-card>
-  <button ion-button (click)='criarNotificacao()'> Notificar </button>
+  <button ion-button (click)='criarNotificacao()'  *ngIf="descricao" > Notificar </button>
 </ion-content>
