@@ -1,6 +1,6 @@
 
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { IonicPage, NavController, NavParams, Searchbar } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Searchbar, LoadingController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { NativeGeocoder, NativeGeocoderReverseResult, NativeGeocoderForwardResult } from '@ionic-native/native-geocoder';
@@ -18,8 +18,6 @@ import {
   Marker, LatLng,
   Geocoder, BaseArrayClass, GeocoderResult, GeocoderRequest, HtmlInfoWindow,
 } from '@ionic-native/google-maps';
-import { StorageService } from '../../services/storage.service';
-import { UsuarioService } from '../../services/domain/usuario.service';
 import { NotificacaoDTO } from '../../models/notificacao.dto';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
 import { API_CONFIG } from '../../config/api.config';
@@ -49,11 +47,14 @@ export class PrincipalPage {
     public geolocation: Geolocation,
     public auth: AuthService,
     private nativeGeocoder: NativeGeocoder,    //private locationAccuracy: LocationAccuracy
-    public notificacaoService: NotificacaoService) {
+    public notificacaoService: NotificacaoService,
+    public loadingCtrl: LoadingController,) {
   }
   ionViewDidLoad() {
     //  this.ativarlocal();
+    let loader = this.presentLoading();
     this.loadMap().then(() => {
+      loader.dismiss();
       this.geolocateNative();
       this.carregarAllMarcadores();
     });
@@ -83,13 +84,10 @@ export class PrincipalPage {
         alert('Ative a localização do seu celular!');
       }
     }).catch((error) => {
-      // console.log('Erro ao obter a localização', error);
       alert('Erro ao obter a localização: ' + error);
     });
   }
   loadMap() {
-    //alert("Bem vindo! " + localStorage.getItem('usuarioDTO'));
-    // this.search_address = 'Barro Preto, BH';
     let latlng: LatLng = new LatLng(-19.8157, -43.9542);
     this.map = GoogleMaps.create('map_canvas');
     return this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
@@ -125,12 +123,14 @@ export class PrincipalPage {
             '<p> Descrição: ' + notificacao.descricao + '</p>' +
             '<p> Data e Hora: ' + notificacao.logHora + '</p>' +
             '<p> Endereço: ' + notificacao.endereco + '</p>' ,
-            '<img src="'+ imagem +'">'          
+            '<div class=figure>' +
+            '<img class=scaled src="'+ imagem +'">' +
+            '</div>'         
           ].join("");
-          frame.getElementsByTagName("img")[0].addEventListener("click", () => {
+          frame.getElementsByTagName("img")[0] ;//.addEventListener("click", () => {
            // htmlInfoWindow.setBackgroundColor('red');
-         });
-          htmlInfoWindow.setContent(frame, { width: "270px", height: "380px" });
+        // });
+          htmlInfoWindow.setContent(frame, { width: "280px", height: "480px" });
           let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
           this.map.addMarker({
             title: notificacao.categoria,     
@@ -145,7 +145,7 @@ export class PrincipalPage {
         }
       },
         error => {
-          alert("Errrorrrrrrr: " + JSON.stringify(error));
+          alert("Erro ao Carregar os marcadores: " + JSON.stringify(error));
         });
   }
 
@@ -167,12 +167,9 @@ export class PrincipalPage {
   }
 
   procurarEnd_click(event) {
-    // Address -> latitude,longitude
     Geocoder.geocode({
       "address": this.search_address
     }).then((results: GeocoderResult[]) => {
-      //  console.log(results);
-      //  alert(results);
       if (!results.length) {
         this.isRunning = false;
         return null;
@@ -183,26 +180,10 @@ export class PrincipalPage {
       }).then(() => {
         this.isRunning = false;
       });
-      // Add a marker
-      //  return this.map.addMarker({
-      //  'position': results[0].position,
-      //  'title':  JSON.stringify(results[0].position)
-      //});
     })
-
-    // .then((marker: Marker) => {
-    // Move to the position
-    // this.map.animateCamera({
-    //   'target':
-    //   marker.getPosition(),
-    //   'zoom': 17
-    //  }).then(() => {
-    //    marker.showInfoWindow();
-    //    this.isRunning = false;
-    //  });
-    //  });
     this.search = false;
   }
+
   toggleSearch() {
     if (this.search) {
       this.search = false;
@@ -211,11 +192,13 @@ export class PrincipalPage {
       this.searchbarElement.setFocus();
     }
   }
-  doRefresh(refresher) {
-    this.loadMap();
-    setTimeout(() => {
-      refresher.complete();
-    }, 2000);
+
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Aguarde...",
+    });
+    loader.present();
+    return loader;
   }
 }
 

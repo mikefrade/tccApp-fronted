@@ -45,13 +45,15 @@ export class MapaNotificacaoPage {
               '<p><b> Categoria: ' + notificacao.categoria + '</b></p></p>' +
               '<p> Descrição: ' + notificacao.descricao + '</p>' +
               '<p> Data e Hora: ' + notificacao.logHora + '</p>' +
-              '<p> Endereço: ' + notificacao.endereco + '</p>',
-              '<img src="' + imagem + '">'
+              '<p> Endereço: ' + notificacao.endereco + '</p>', 
+              '<div class=figure>' +
+              '<img class=scaled src="'+ imagem +'">' +
+              '</div>'  
             ].join("");
-            frame.getElementsByTagName("img")[0].addEventListener("click", () => {
+            frame.getElementsByTagName("img")[0] ;//.addEventListener("click", () => {
               // htmlInfoWindow.setBackgroundColor('red');
-            });
-            htmlInfoWindow.setContent(frame, { width: "270px", height: "380px" });
+           // });
+            htmlInfoWindow.setContent(frame,  { width: "280px", height: "480px" });
             let uluru = { "lat": Number(notificacao.latitude), "lng": Number(notificacao.longitude) };
             this.map.addMarker({
               title: notificacao.categoria,

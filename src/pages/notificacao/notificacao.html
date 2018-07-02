@@ -27,15 +27,17 @@
       <ion-label stacked> Foto: </ion-label>
     </ion-item>
     <ion-item>
-        <button ion-button outline round  (click)="getCameraPicture()" [disabled]="cameraOn">
-          <ion-icon name="camera"></ion-icon>
-        </button>
-        <button ion-button outline round  (click)="getGalleryPicture()" [disabled]="cameraOn">
-          <ion-icon name="image"></ion-icon>
-        </button>
-      </ion-item>
+      <button ion-button outline round (click)="getCameraPicture()" [disabled]="cameraOn">
+        <ion-icon name="camera"></ion-icon>
+      </button>
+      <button ion-button outline round (click)="getGalleryPicture()" [disabled]="cameraOn">
+        <ion-icon name="image"></ion-icon>
+      </button>
+    </ion-item>
     <ion-item *ngIf="foto">
-      <img [src]="foto">
+      <div class="figure">
+        <img class="scaled" [src]="foto">
+      </div>
     </ion-item>
 
     <ion-item>
@@ -52,7 +54,7 @@
         <ion-option value="Saneamento Básico">Saneamento Básico</ion-option>
         <ion-option value="Transporte">Transporte</ion-option>
         <ion-option value="Trânsito">Trânsito</ion-option>
-        <ion-option value="Esporte/Lazer">Esporte/Lazer</ion-option>       
+        <ion-option value="Esporte/Lazer">Esporte/Lazer</ion-option>
         <ion-option value="Sinalização">Sinalização</ion-option>
         <ion-option value="Obras">Obras</ion-option>
         <ion-option value="Fiscalização">Fiscalização</ion-option>
@@ -64,5 +66,5 @@
       <ion-textarea type="text" [(ngModel)]="descricao"> </ion-textarea>
     </ion-item>
   </ion-card>
-  <button ion-button (click)='criarNotificacao()'  *ngIf="descricao" > Notificar </button>
+  <button ion-button (click)='criarNotificacao()' *ngIf="descricao"> Notificar </button>
 </ion-content>

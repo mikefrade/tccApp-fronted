@@ -1,5 +1,5 @@
 import { Component, Injectable } from '@angular/core';
-import { NavController, IonicPage, MenuController, LoadingController } from 'ionic-angular';
+import { NavController, IonicPage, MenuController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
@@ -19,7 +19,6 @@ export class HomePage {
     public auth: AuthService,
     public toastCtrl: ToastController,
     public storage: StorageService,
-    public loadingCtrl: LoadingController,
     public usuarioService: UsuarioService
   ) {
   }
@@ -38,7 +37,6 @@ export class HomePage {
         this.storage.setUsuarioDTO(JSON.parse(ob));
         this.auth.isLoggedIn = true;
         this.navCtrl.setRoot('PrincipalPage');
-        //alert("Bem vindo! " + localStorage.getItem('usuarioDTO'));
     }, error => {
         alert("Error usurio: " + JSON.stringify(error));
     });
@@ -60,20 +58,12 @@ export class HomePage {
       })
   }
   redirecionaPage() {
-    let loader = this.presentLoading();
-    //if (this.storage.getLocalUser().email) {
     if (this.auth.isLoggedIn == true) {
       this.navCtrl.setRoot('PrincipalPage');
     } else {
       this.toastCtrl.create({ duration: 3000, position: 'bottom', message: 'Erro ao efetuar login' })
     }
   }
-  presentLoading() {
-    const loader = this.loadingCtrl.create({
-      content: "Aguarde...",
-      duration: 2000
-    });
-    loader.present();
-  }
+
 }
 

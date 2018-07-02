@@ -16,11 +16,7 @@
 
 <ion-content>
 
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
-  <div id="map_canvas">
+    <div id="map_canvas">
     <span id="smallPanel" #searchbar [hidden]="!search">
 
       <input ion-input clearInput placeholder="Barro Preto - BH" [(ngModel)]="search_address" value="Belo Horizonte, Minas Gerais">

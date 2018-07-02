@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { CameraOptions, Camera } from '@ionic-native/camera';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
 // import { PrincipalPage } from '../principal/principal';
@@ -26,13 +26,17 @@ export class NotificacaoPage {
   descricao: string;
   categoria: any;
   codNotificacao: string;
-  
+
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public notificacaoService: NotificacaoService,
     public camera: Camera,
-    public alertCtrl: AlertController) { }
+    public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController) {
+
+      this.foto = null;
+     }
 
   ionViewDidLoad() {
     this.end = this.navParams.get('endereco');
@@ -41,10 +45,23 @@ export class NotificacaoPage {
   }
 
   criarNotificacao() {
+    let loader = this.presentLoading();
     this.notificacaoService.criarNotificacao(this.latitude, this.longitude, this.end, this.categoria, this.descricao)
       .subscribe(response => {
         this.codNotificacao = this.notificacaoService.extractId(response.headers.get('location'));
-        this.sendPicuture();
+       if(this.foto != null){
+        this.sendPicuture()
+        .subscribe(response => {
+          this.foto = null;
+          loader.dismiss();
+          this.showInsertOk();
+        }, error => {
+          loader.dismiss();
+        })
+       } else{
+        loader.dismiss();
+        this.showInsertOk();
+       }
       },
         error => {
           alert(error.text());
@@ -52,16 +69,27 @@ export class NotificacaoPage {
   }
 
   sendPicuture() {
-    this.notificacaoService.uploadPicture(this.foto, this.codNotificacao)
-      .subscribe(response => {
-        this.foto = null;
-        this.showInsertOk();
-      }, error => {
-
-      })
+    return this.notificacaoService.uploadPicture(this.foto, this.codNotificacao);
   }
 
-  showInsertOk(){
+  showInsertErro() {
+    let alert = this.alertCtrl.create({
+      title: 'Erro!',
+      message: 'Notificação não foi criada. Tente novamente!',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+           
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  showInsertOk() {
     let alert = this.alertCtrl.create({
       title: 'Sucesso!',
       message: 'Notificação criada com sucesso',
@@ -115,6 +143,13 @@ export class NotificacaoPage {
       this.cameraOn = false;
       // Handle error
     });
+  }
 
+  presentLoading() {
+    let loader = this.loadingCtrl.create({
+      content: "Aguarde...",
+    });
+    loader.present();
+    return loader;
   }
 }
