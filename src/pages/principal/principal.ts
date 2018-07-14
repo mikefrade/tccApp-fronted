@@ -162,6 +162,7 @@ export class PrincipalPage {
   }
 
   showCriarNotificacao(endereco: string, lat: string, lng: string) {
+ 
     this.navCtrl.push('NotificacaoPage', { endereco: endereco,
     latitude: lat, longitude: lng });
   }

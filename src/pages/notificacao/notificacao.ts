@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { CameraOptions, Camera } from '@ionic-native/camera';
 import { NotificacaoService } from '../../services/domain/notificacao.service';
+
 // import { PrincipalPage } from '../principal/principal';
 
 /**
@@ -19,6 +20,7 @@ import { NotificacaoService } from '../../services/domain/notificacao.service';
 export class NotificacaoPage {
 
   foto: string;
+
   cameraOn: boolean = false;
   end: string;
   latitude: string;
@@ -34,14 +36,14 @@ export class NotificacaoPage {
     public camera: Camera,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController) {
-
-      this.foto = null;
-     }
+    this.foto = null;
+  }
 
   ionViewDidLoad() {
     this.end = this.navParams.get('endereco');
     this.latitude = this.navParams.get('latitude');
     this.longitude = this.navParams.get('longitude');
+    alert("PAGINA NTIFICAOA");
   }
 
   criarNotificacao() {
@@ -49,19 +51,19 @@ export class NotificacaoPage {
     this.notificacaoService.criarNotificacao(this.latitude, this.longitude, this.end, this.categoria, this.descricao)
       .subscribe(response => {
         this.codNotificacao = this.notificacaoService.extractId(response.headers.get('location'));
-       if(this.foto != null){
-        this.sendPicuture()
-        .subscribe(response => {
-          this.foto = null;
+        if (this.foto != null) {
+          this.sendPicuture()
+            .subscribe(response => {
+              this.foto = null;
+              loader.dismiss();
+              this.showInsertOk();
+            }, error => {
+              loader.dismiss();
+            })
+        } else {
           loader.dismiss();
           this.showInsertOk();
-        }, error => {
-          loader.dismiss();
-        })
-       } else{
-        loader.dismiss();
-        this.showInsertOk();
-       }
+        }
       },
         error => {
           alert(error.text());
@@ -81,7 +83,7 @@ export class NotificacaoPage {
         {
           text: 'Ok',
           handler: () => {
-           
+
           }
         }
       ]
@@ -125,6 +127,15 @@ export class NotificacaoPage {
     });
 
   }
+
+ /* getCameraVideo() {
+    this.videoPlayer.play('file:///android_asset/www/movie.mp4').then(() => {
+      console.log('video completed');
+    }).catch(err => {
+      console.log(err);
+    });
+
+  }*/
 
   getGalleryPicture() {
     this.cameraOn = true;

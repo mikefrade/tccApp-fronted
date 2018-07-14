@@ -103,4 +103,5 @@
     <plugin name="cordova-plugin-request-location-accuracy" spec="^2.2.3" />
     <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
     <engine name="android" spec="~7.0.0" />
+    <plugin name="com.moust.cordova.videoplayer" spec="https://github.com/moust/cordova-plugin-videoplayer.git" />
 </widget>
